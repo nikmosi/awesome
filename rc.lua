@@ -311,7 +311,7 @@ globalkeys = gears.table.join(
 	awful.key({ modkey }, "k", function()
 		awful.client.focus.byidx(-1)
 	end, { description = "focus previous by index", group = "client" }),
-	awful.key({ modkey }, "o", function()
+	awful.key({ modkey }, "/", function()
 		mymainmenu:show()
 	end, { description = "show main menu", group = "awesome" }),
 
