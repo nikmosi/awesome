@@ -13,7 +13,7 @@ awful.rules.rules = {
 		rule = { class = "firefox" },
 		properties = {
 			-- автоматически на тег "web"
-			tag = "web",
+			tag = require("vars").web,
 			switchtotag = false, -- сразу переключаться на него
 		},
 	},

@@ -250,13 +250,27 @@ awful.screen.connect_for_each_screen(function(s)
 			awful.layout.inc(-1)
 		end)
 	))
-	-- Create a taglist widget
+
 	s.mytaglist = awful.widget.taglist({
 		screen = s,
 		filter = awful.widget.taglist.filter.all,
 		buttons = taglist_buttons,
+		widget_template = {
+			{
+				{
+					id = "text_role",
+					widget = wibox.widget.textbox,
+				},
+				left = 8,
+				right = 8,
+				top = 2,
+				bottom = 2,
+				widget = wibox.container.margin,
+			},
+			id = "background_role",
+			widget = wibox.container.background,
+		},
 	})
-
 	-- Create a tasklist widget
 	s.mytasklist = awful.widget.tasklist({
 		screen = s,
@@ -585,3 +599,5 @@ client.connect_signal("unfocus", function(c)
 	c.border_color = beautiful.border_normal
 end)
 -- }}}
+
+require("custom_tags")
