@@ -298,7 +298,14 @@ awful.screen.connect_for_each_screen(function(s)
 		{ -- Right widgets
 			layout = wibox.layout.fixed.horizontal,
 			mykeyboardlayout,
-			wibox.widget.systray(),
+			{
+				wibox.widget.systray(),
+				left = dpi(4),
+				right = dpi(4),
+				top = dpi(2),
+				bottom = dpi(2),
+				widget = wibox.container.margin,
+			},
 			mytextclock,
 			s.mylayoutbox,
 		},
