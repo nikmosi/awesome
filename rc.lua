@@ -2,6 +2,8 @@
 -- found (e.g. lgi). If LuaRocks is not installed, do nothing.
 pcall(require, "luarocks.loader")
 local vars = require("vars")
+local xresources = require("beautiful.xresources")
+local dpi = xresources.apply_dpi
 
 -- Standard awesome library
 local gears = require("gears")
@@ -23,7 +25,7 @@ require("awful.hotkeys_popup.keys")
 require("rules")
 
 if awesome.startup then
-	require("autostart")
+	-- require("autostart")
 end
 
 -- {{{ Error handling
@@ -69,7 +71,7 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+beautiful.init(gears.filesystem.get_configuration_dir() .. "themes/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "kitty"

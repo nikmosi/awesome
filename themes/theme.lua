@@ -12,7 +12,7 @@ local themes_path = gfs.get_themes_dir()
 local theme = {}
 
 -- colors translated from Qtile settings
-theme.font = "JetBrainsMono Nerd Font Mono 18"
+theme.font = "JetBrainsMono Nerd Font Mono 12"
 theme.bg_normal = "#1a1b26"
 theme.bg_focus = "#373B41"
 theme.bg_urgent = "#f7768e"
@@ -47,7 +47,7 @@ theme.border_marked = "#91231c"
 --theme.taglist_bg_focus = "#ff0000"
 
 -- Generate taglist squares:
-local taglist_square_size = dpi(4)
+local taglist_square_size = dpi(8)
 theme.taglist_squares_sel = theme_assets.taglist_squares_sel(taglist_square_size, theme.fg_normal)
 theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(taglist_square_size, theme.fg_normal)
 
