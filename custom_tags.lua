@@ -1,7 +1,9 @@
+local vars = require("vars")
 local gears = require("gears")
 local awful = require("awful")
 
-local web = require("vars").tags.web
+local modkey = vars.modkey
+local web = vars.tags.web
 
 -- тег
 awful.tag.add(web, {

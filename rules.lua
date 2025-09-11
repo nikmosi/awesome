@@ -1,51 +1,44 @@
-local awful = require("awful")
 local vars = require("vars")
-local H = require("helpers")
 
-local function to_tag(name, idx, also_view)
-	return function(c)
-		local s = H.screen_by_index(idx)
-		local t = H.ensure_tag(name, s)
-		c:move_to_tag(t)
-		if also_view then
-			t:view_only()
-		end
-	end
-end
+-- If LuaRocks is installed, make sure that packages installed through it are
+-- found (e.g. lgi). If LuaRocks is not installed, do nothing.
+pcall(require, "luarocks.loader")
+
+-- Standard awesome library
+local awful = require("awful")
+require("awful.autofocus")
+-- Widget and layout library
+-- Theme handling library
+local beautiful = require("beautiful")
+-- Notification library
 
 awful.rules.rules = {
-	-- базовые
+	-- All clients will match this rule.
 	{
 		rule = {},
 		properties = {
+			border_width = beautiful.border_width,
+			border_color = beautiful.border_normal,
 			focus = awful.client.focus.filter,
 			raise = true,
+			keys = vars.clientkeys,
+			buttons = clientbuttons,
 			screen = awful.screen.preferred,
+			placement = awful.placement.no_overlap + awful.placement.no_offscreen,
 		},
 	},
 	{ rule_any = { type = { "normal", "dialog" } }, properties = { titlebars_enabled = false } },
 
-	-- плавающие
-	{
-		rule_any = {
-			class = { "pavucontrol", "qbittorrent", "float_pass", "ripdrag", "ssh-askpass" },
-			name = { "branchdialog", "pinentry" },
-		},
-		properties = { floating = true },
-	},
-
 	-- firefox -> 🌐 на экран 1
 	{
 		rule = { class = "firefox" },
-		properties = { switchtotag = false },
-		callback = to_tag(vars.tags.web, vars.affinity.web),
+		properties = { tag = vars.tags.web, switchtotag = true },
 	},
 
 	-- easyeffects -> свой тег на экран 2
 	{
 		rule = { class = "easyeffects" },
-		properties = { switchtotag = false },
-		callback = to_tag(vars.tags.easyeffects, vars.affinity.easyeffects),
+		properties = { screen = 2, tag = "2", switchtotag = false },
 	},
 
 	-- discord-семейство -> の на экран 2
@@ -61,15 +54,13 @@ awful.rules.rules = {
 				"vesktop",
 			},
 		},
-		properties = { switchtotag = false },
-		callback = to_tag(vars.tags.discord, vars.affinity.discord),
+		properties = { screen = 2, tag = "4", switchtotag = false },
 	},
 
 	-- chatterino -> 󰕃 на экран 2
 	{
 		rule = { class = "chatterino" },
-		properties = { switchtotag = false },
-		callback = to_tag(vars.tags.chatterino, vars.affinity.chatterino),
+		properties = { screen = 2, tag = "6", switchtotag = false },
 	},
 
 	-- minecraft и лончеры ->  на экран 1
@@ -78,9 +69,58 @@ awful.rules.rules = {
 			name = { "^Minecraft" }, -- Lua-паттерн, начало строки
 			class = { "steam_proton", "epicgameslauncher.exe", "rocketleague.exe", "bakkesmod.exe" },
 		},
-		properties = { switchtotag = false },
-		callback = to_tag(vars.tags.minecraft, vars.affinity.minecraft),
+		properties = { tag = "6", switchtotag = false },
 	},
+	-- Floating clients.
+	{
+		rule_any = {
+			instance = {
+				"DTA", -- Firefox addon DownThemAll.
+				"copyq", -- Includes session name in class.
+				"pinentry",
+			},
+
+			class = {
+				"pavucontrol",
+				"qbittorrent",
+				"float_pass",
+				"ripdrag",
+				"ssh-askpass",
+				"Arandr",
+				"Blueman-manager",
+				"Gpick",
+				"Kruler",
+				"MessageWin", -- kalarm.
+				"Sxiv",
+				"Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
+				"Wpa_gui",
+				"veromix",
+				"xtightvncviewer",
+			},
+
+			-- Note that the name property shown in xprop might be set slightly after creation of the client
+			-- and the name shown there might not match defined rules here.
+			name = {
+				"branchdialog",
+				"pinentry",
+				"Event Tester", -- xev.
+			},
+			role = {
+				"AlarmWindow", -- Thunderbird's calendar.
+				"ConfigManager", -- Thunderbird's about:config.
+				"pop-up", -- e.g. Google Chrome's (detached) Developer Tools.
+			},
+		},
+		properties = { floating = true },
+	},
+
+	-- Add titlebars to normal clients and dialogs
+	{ rule_any = { type = { "normal", "dialog" } }, properties = { titlebars_enabled = true } },
+
+	-- Set Firefox to always map on the tag named "2" on screen 1.
+	-- { rule = { class = "Firefox" },
+	--   properties = { screen = 1, tag = "2" } },
 }
+-- }}}
 
 return {}
