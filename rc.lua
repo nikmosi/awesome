@@ -25,7 +25,7 @@ require("awful.hotkeys_popup.keys")
 require("rules")
 
 if awesome.startup then
-	-- require("autostart")
+	require("autostart")
 end
 
 -- {{{ Error handling
