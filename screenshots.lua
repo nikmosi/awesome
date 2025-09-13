@@ -9,7 +9,6 @@ local M = {}
 local HOME = os.getenv("HOME") or ""
 local conf = {
 	home = HOME,
-	maim_command = "maim %s", -- сюда подставим "<path> <args>"
 	xclip_image = "xclip -selection clipboard -t image/png -i %q",
 	xclip_text = "printf %q | xclip -selection clipboard",
 	imgur = {
@@ -54,17 +53,6 @@ local function get_path()
 	return path
 end
 
-local function call_screenshot_command(args)
-	local path = get_path()
-	local cmd = string.format(conf.maim_command, (path .. " " .. (args or "")))
-	sh(cmd, function(_, _, code)
-		if code ~= 0 then
-			notify("error", "can't take screen", "critical")
-		end
-	end)
-	return path
-end
-
 local function to_clip_image(path)
 	if not path then
 		return
@@ -77,6 +65,21 @@ local function to_clip_text(text)
 		return
 	end
 	sh(string.format(conf.xclip_text, text))
+end
+
+-- Вызывает maim и дергает cb(path, ok) после завершения
+local function call_screenshot_command(args, cb)
+	local path = get_path()
+	local cmd = string.format("maim %s %q", args or "", path)
+	awful.spawn.easy_async_with_shell(cmd, function(_, _, _, code)
+		local ok = (code == 0)
+		if not ok then
+			notify("error", "can't take screen", "critical")
+		end
+		if cb then
+			cb(path, ok)
+		end
+	end)
 end
 
 local function upload(path, cb)
@@ -111,14 +114,16 @@ end
 
 -- === публичные экшены ===
 function M.take_screenshot()
-	local path = call_screenshot_command(" -s")
-	gears.timer.start_new(0.15, function()
+	call_screenshot_command("-s", function(path, ok)
+		if not ok then
+			return
+		end
 		to_clip_image(path)
-		return false
 	end)
 end
 
 function M.recognize_qr()
+	-- Поток в stdout -> zbarimg -> в буфер
 	local cmd = "maim -qs | zbarimg -q --raw - | xclip -selection clipboard -f"
 	sh(cmd, function(_, _, code)
 		if code ~= 0 then
@@ -128,16 +133,19 @@ function M.recognize_qr()
 end
 
 function M.take_full_screenshot()
-	local path = call_screenshot_command("")
-	gears.timer.start_new(0.15, function()
+	call_screenshot_command("", function(path, ok)
+		if not ok then
+			return
+		end
 		to_clip_image(path)
-		return false
 	end)
 end
 
 function M.take_screen_and_upload()
-	local path = call_screenshot_command(" -s")
-	gears.timer.start_new(0.3, function()
+	call_screenshot_command("-s", function(path, ok)
+		if not ok then
+			return
+		end
 		upload(path, function(link)
 			if not link then
 				return
@@ -145,7 +153,6 @@ function M.take_screen_and_upload()
 			to_clip_text(link)
 			notify("screenshot", "link in clipboard: " .. link, "normal")
 		end)
-		return false
 	end)
 end
 
