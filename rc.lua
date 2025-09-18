@@ -4,6 +4,7 @@ pcall(require, "luarocks.loader")
 local vars = require("vars")
 local xresources = require("beautiful.xresources")
 local dpi = xresources.apply_dpi
+local cenv = require("cenv")
 
 -- Standard awesome library
 local gears = require("gears")
@@ -23,12 +24,19 @@ awesome.register_xproperty("awesome_no_autostart", "boolean")
 
 local skip_autostart = awesome.get_xproperty("awesome_no_autostart") == true
 
+-- local ok, dkjson = pcall(require, "dkjson")
+-- if ok then
+-- 	package.loaded["json"] = dkjson
+-- else
+-- 	naughty.notify({ title = "JSON load error", text = dkjson })
+-- end
+
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
 local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
-local fs_widget = require("awesome-wm-widgets.fs-widget.fs-widget")
+local weather_widget = require("awesome-wm-widgets.weather-api-widget.weather")
 
 local volume_widget = require("awesome-wm-widgets.pactl-widget.volume")
 local vol = volume_widget({
@@ -290,17 +298,24 @@ awful.screen.connect_for_each_screen(function(s)
 		s.mytasklist, -- Middle widget
 		{ -- Right widgets
 			layout = wibox.layout.fixed.horizontal,
-			spacing = 10,
 			mykeyboardlayout,
 			{
 				wibox.widget.systray(),
-				left = dpi(8),
-				right = dpi(8),
 				top = dpi(6),
 				bottom = dpi(6),
 				widget = wibox.container.margin,
 			},
+			weather_widget({
+				api_key = cenv.weather_api_key,
+				coordinates = { 55.04, 82.93 },
+				time_format_12h = false,
+				icons = "weather-underground-icons",
+				lang = "en",
+				show_hourly_forecast = true,
+				show_daily_forecast = true,
+			}),
 			cpu_widget({ width = 70, step_width = 2, step_spacing = 0, color = "#434c5e" }),
+			spacing = 10,
 			vol,
 			mytextclock,
 			s.mylayoutbox,
