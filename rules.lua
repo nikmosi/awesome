@@ -11,6 +11,8 @@ require("awful.autofocus")
 -- Theme handling library
 local beautiful = require("beautiful")
 -- Notification library
+--
+local screen_tags = vars.tags.for_each_screen
 
 awful.rules.rules = {
 	-- All clients will match this rule.
@@ -37,8 +39,10 @@ awful.rules.rules = {
 
 	-- easyeffects -> свой тег на экран 2
 	{
-		rule = { class = "easyeffects" },
-		properties = { screen = 2, tag = "2", switchtotag = false },
+		rule_any = {
+			class = { "easyeffects", "nekoray", "hiddify" },
+		},
+		properties = { screen = 2, tag = screen_tags[8], switchtotag = false },
 	},
 
 	-- discord-семейство -> の на экран 2
@@ -48,19 +52,22 @@ awful.rules.rules = {
 				"anilibrix",
 				"discord",
 				"legcord",
-				"hiddify",
-				"ayugram-desktop",
-				"telegram-desktop",
 				"vesktop",
+				"TelegramDesktop", -- correct for Telegram
+				"AyuGramDesktop", -- correct for Ayugram
+			},
+			instance = {
+				"telegram-desktop", -- instance alternative
+				"ayugram-desktop", -- instance alternative
 			},
 		},
-		properties = { screen = 2, tag = "4", switchtotag = false },
+		properties = { screen = 2, tag = screen_tags[3], switchtotag = false },
 	},
 
 	-- chatterino -> 󰕃 на экран 2
 	{
 		rule = { class = "chatterino" },
-		properties = { screen = 2, tag = "6", switchtotag = false },
+		properties = { screen = 2, tag = screen_tags[2], switchtotag = false },
 	},
 
 	-- minecraft и лончеры ->  на экран 1
@@ -69,7 +76,7 @@ awful.rules.rules = {
 			name = { "^Minecraft" }, -- Lua-паттерн, начало строки
 			class = { "steam_proton", "epicgameslauncher.exe", "rocketleague.exe", "bakkesmod.exe" },
 		},
-		properties = { tag = "6", switchtotag = false },
+		properties = { screen = 1, tag = screen_tags[6], switchtotag = false },
 	},
 	-- Floating clients.
 	{

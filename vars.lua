@@ -6,12 +6,36 @@ local modkey = "Mod4"
 
 M.modkey = modkey
 
+local map = {
+	["0"] = "〇",
+	["1"] = "一",
+	["2"] = "二",
+	["3"] = "三",
+	["4"] = "四",
+	["5"] = "五",
+	["6"] = "六",
+	["7"] = "七",
+	["8"] = "八",
+	["9"] = "九",
+}
+
+local function to_japanese(tbl)
+	local result = {}
+	for i, v in ipairs(tbl) do
+		local s = tostring(v)
+		local converted = s:gsub("%d", map)
+		result[i] = converted
+	end
+	return result
+end
+
 M.tags = {
 	web = "🌐",
 	discord = "の",
 	chatterino = "chat",
 	minecraft = "mine",
 	easyeffects = "ee",
+	for_each_screen = to_japanese({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }),
 }
 -- какие экраны использовать (1 = левый/первый, 2 = правый/второй)
 M.affinity = {

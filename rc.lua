@@ -18,15 +18,30 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
+
+awesome.register_xproperty("awesome_no_autostart", "boolean")
+
+local skip_autostart = awesome.get_xproperty("awesome_no_autostart") == true
+
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
-require("rules")
+local volume_widget = require("awesome-wm-widgets.volume-widget.volume")
+local vol = volume_widget({
+	widget_type = "arc", -- "arc" also works
+	with_icon = true,
+	device = "default",
+	step = 5,
+	timeout = 1,
 
-if awesome.startup then
-	require("autostart")
-end
+	-- pretty bits
+	bar_size = 12, -- thickness
+	main_color = beautiful.accent or "#7aa2f7",
+	mute_color = beautiful.urgent or "#f7768e",
+	bg_color = beautiful.bg3 or "#2b2f3a",
+	icon = "🟢", -- will switch on mute automatically
+})
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -203,35 +218,11 @@ end
 
 -- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
 screen.connect_signal("property::geometry", set_wallpaper)
-
-local map = {
-	["0"] = "〇",
-	["1"] = "一",
-	["2"] = "二",
-	["3"] = "三",
-	["4"] = "四",
-	["5"] = "五",
-	["6"] = "六",
-	["7"] = "七",
-	["8"] = "八",
-	["9"] = "九",
-}
-
-local function to_japanese(tbl)
-	local result = {}
-	for i, v in ipairs(tbl) do
-		local s = tostring(v)
-		local converted = s:gsub("%d", map)
-		result[i] = converted
-	end
-	return result
-end
-
 awful.screen.connect_for_each_screen(function(s)
 	-- Wallpaper
 	set_wallpaper(s)
 
-	local tags = to_japanese({ "1", "2", "3", "4", "5", "6", "7", "8", "9" })
+	local tags = vars.tags.for_each_screen
 	-- Each screen has its own tag table.
 	awful.tag(tags, s, awful.layout.layouts[1])
 
@@ -267,8 +258,8 @@ awful.screen.connect_for_each_screen(function(s)
 				},
 				left = 8,
 				right = 8,
-				top = 2,
-				bottom = 2,
+				top = 8,
+				bottom = 8,
 				widget = wibox.container.margin,
 			},
 			id = "background_role",
@@ -300,12 +291,13 @@ awful.screen.connect_for_each_screen(function(s)
 			mykeyboardlayout,
 			{
 				wibox.widget.systray(),
-				left = dpi(4),
-				right = dpi(4),
-				top = dpi(2),
-				bottom = dpi(2),
+				left = dpi(8),
+				right = dpi(8),
+				top = dpi(6),
+				bottom = dpi(6),
 				widget = wibox.container.margin,
 			},
+			vol,
 			mytextclock,
 			s.mylayoutbox,
 		},
@@ -323,12 +315,30 @@ root.buttons(gears.table.join(
 ))
 -- }}}
 
+local function increase_volume()
+	volume_widget:inc(5)
+end
+
+local function decrease_volume()
+	volume_widget:dec(5)
+end
+
+local function toggle_mute()
+	volume_widget:toggle()
+end
+
 -- {{{ Key bindings
 local globalkeys = gears.table.join(
 	awful.key({ modkey }, "s", hotkeys_popup.show_help, { description = "show help", group = "awesome" }),
 	awful.key({ modkey }, "Left", awful.tag.viewprev, { description = "view previous", group = "tag" }),
 	awful.key({ modkey }, "Right", awful.tag.viewnext, { description = "view next", group = "tag" }),
 	awful.key({ modkey }, "Escape", awful.tag.history.restore, { description = "go back", group = "tag" }),
+
+	-- {{{ Volumes
+	awful.key({}, "XF86AudioRaiseVolume", increase_volume, { description = "increase volume", group = "media" }),
+	awful.key({}, "XF86AudioLowerVolume", decrease_volume, { description = "decrease volume", group = "media" }),
+	awful.key({}, "XF86AudioMute", toggle_mute, { description = "toggle mute", group = "media" }),
+	-- }}}
 
 	awful.key({ modkey }, "j", function()
 		awful.client.focus.byidx(1)
@@ -365,7 +375,10 @@ local globalkeys = gears.table.join(
 	awful.key({ modkey }, "Return", function()
 		awful.spawn(terminal)
 	end, { description = "open a terminal", group = "launcher" }),
-	awful.key({ modkey, "Control" }, "r", awesome.restart, { description = "reload awesome", group = "awesome" }),
+	awful.key({ modkey, "Control" }, "r", function()
+		awesome.set_xproperty("awesome_no_autostart", true)
+		awesome.restart()
+	end, { description = "reload awesome", group = "awesome" }),
 	awful.key({ modkey, "Shift" }, "q", awesome.quit, { description = "quit awesome", group = "awesome" }),
 
 	awful.key({ modkey }, "l", function()
@@ -530,3 +543,8 @@ end)
 -- }}}
 
 require("custom_tags")
+require("rules")
+
+if awesome.startup and not skip_autostart then
+	require("autostart")
+end

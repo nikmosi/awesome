@@ -5,7 +5,7 @@ local commands = {
 	"chatterino",
 	"hyperhdr --desktop",
 	"ayugram-desktop",
-	"hiddify",
+	"nekoray",
 	"firefox",
 	"easyeffects",
 	"prismatik && sleep 0.5 && prismatik --on && prismatik --on",
