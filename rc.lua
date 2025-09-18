@@ -27,11 +27,13 @@ local skip_autostart = awesome.get_xproperty("awesome_no_autostart") == true
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
-local volume_widget = require("awesome-wm-widgets.volume-widget.volume")
+local cpu_widget = require("awesome-wm-widgets.cpu-widget.cpu-widget")
+local fs_widget = require("awesome-wm-widgets.fs-widget.fs-widget")
+
+local volume_widget = require("awesome-wm-widgets.pactl-widget.volume")
 local vol = volume_widget({
 	widget_type = "arc", -- "arc" also works
 	with_icon = true,
-	device = "default",
 	step = 5,
 	timeout = 1,
 
@@ -288,6 +290,7 @@ awful.screen.connect_for_each_screen(function(s)
 		s.mytasklist, -- Middle widget
 		{ -- Right widgets
 			layout = wibox.layout.fixed.horizontal,
+			spacing = 10,
 			mykeyboardlayout,
 			{
 				wibox.widget.systray(),
@@ -297,6 +300,7 @@ awful.screen.connect_for_each_screen(function(s)
 				bottom = dpi(6),
 				widget = wibox.container.margin,
 			},
+			cpu_widget({ width = 70, step_width = 2, step_spacing = 0, color = "#434c5e" }),
 			vol,
 			mytextclock,
 			s.mylayoutbox,
