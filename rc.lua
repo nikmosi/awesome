@@ -41,7 +41,7 @@ local weather_widget = require("awesome-wm-widgets.weather-api-widget.weather")
 local volume_widget = require("awesome-wm-widgets.pactl-widget.volume")
 local vol = volume_widget({
 	widget_type = "arc", -- "arc" also works
-	with_icon = true,
+	with_icon = false,
 	step = 5,
 	timeout = 1,
 
