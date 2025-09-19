@@ -4,7 +4,14 @@ local gears = require("gears")
 local awful = require("awful")
 local modkey = "Mod4"
 
+local conf_dir = gears.filesystem.get_configuration_dir()
+
 M.modkey = modkey
+
+M.wallpappers = {
+	conf_dir .. "themes/1.jpg",
+	conf_dir .. "themes/2.jpg",
+}
 
 local map = {
 	["0"] = "〇",

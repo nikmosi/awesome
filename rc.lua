@@ -24,13 +24,6 @@ awesome.register_xproperty("awesome_no_autostart", "boolean")
 
 local skip_autostart = awesome.get_xproperty("awesome_no_autostart") == true
 
--- local ok, dkjson = pcall(require, "dkjson")
--- if ok then
--- 	package.loaded["json"] = dkjson
--- else
--- 	naughty.notify({ title = "JSON load error", text = dkjson })
--- end
-
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -215,9 +208,9 @@ local tasklist_buttons = gears.table.join(
 )
 
 local function set_wallpaper(s)
+	local wallpaper = vars.wallpappers[s.index] or beautiful.wallpaper
 	-- Wallpaper
-	if beautiful.wallpaper then
-		local wallpaper = beautiful.wallpaper
+	if wallpaper then
 		-- If wallpaper is a function, call it with the screen
 		if type(wallpaper) == "function" then
 			wallpaper = wallpaper(s)
