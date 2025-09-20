@@ -42,7 +42,7 @@ awful.rules.rules = {
 		rule_any = {
 			class = { "easyeffects", "nekoray", "hiddify" },
 		},
-		properties = { screen = 2, tag = screen_tags[8], switchtotag = false },
+		properties = { screen = 2, tag = screen_tags[8], switchtotag = false, urgent = false },
 	},
 
 	-- discord-семейство -> の на экран 2
@@ -61,13 +61,13 @@ awful.rules.rules = {
 				"ayugram-desktop", -- instance alternative
 			},
 		},
-		properties = { screen = 2, tag = screen_tags[3], switchtotag = false },
+		properties = { screen = 2, tag = screen_tags[3], switchtotag = false, urgent = false },
 	},
 
 	-- chatterino -> 󰕃 на экран 2
 	{
 		rule = { class = "chatterino" },
-		properties = { screen = 2, tag = screen_tags[2], switchtotag = false },
+		properties = { screen = 2, tag = screen_tags[2], switchtotag = false, urgent = false },
 	},
 
 	-- minecraft и лончеры ->  на экран 1
