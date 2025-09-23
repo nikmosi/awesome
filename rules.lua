@@ -120,6 +120,14 @@ awful.rules.rules = {
 		},
 		properties = { floating = true },
 	},
+
+	{
+		rule_any = { class = { "steam_proton" }, name = { "BakkesModInjectorCpp" } },
+		properties = {},
+		callback = function(c)
+			c.minimized = true
+		end,
+	},
 }
 -- }}}
 

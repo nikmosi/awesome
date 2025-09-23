@@ -18,7 +18,7 @@ local conf = {
 
 -- === утилиты ===
 local function notify(title, text, level)
-	naughty.notify({ title = title, text = text, preset = naughty.config.presets[level or "normal"] })
+	naughty.notify({ title = title, text = text, preset = naughty.config.presets[level or "normal"], timeout = 5 })
 end
 
 local function sh(cmd, cb)
