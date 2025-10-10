@@ -42,7 +42,7 @@ local APPS = {
 		},
 	},
 	{
-		cmd = "ayugram-desktop",
+		cmd = "AyuGram",
 		props = {
 			urgent = false,
 			floating = false,

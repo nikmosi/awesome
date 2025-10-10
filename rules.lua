@@ -122,7 +122,7 @@ awful.rules.rules = {
 	},
 
 	{
-		rule_any = { class = { "steam_proton" }, name = { "BakkesModInjectorCpp" } },
+		rule_any = { class = { "bakkesmod.exe" } },
 		properties = {},
 		callback = function(c)
 			c.minimized = true
