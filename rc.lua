@@ -341,7 +341,7 @@ end
 
 -- {{{ Key bindings
 local globalkeys = gears.table.join(
-	awful.key({ modkey }, "s", hotkeys_popup.show_help, { description = "show help", group = "awesome" }),
+	-- awful.key({ modkey }, "s", hotkeys_popup.show_help, { description = "show help", group = "awesome" }),
 	awful.key({ modkey }, "Left", awful.tag.viewprev, { description = "view previous", group = "tag" }),
 	awful.key({ modkey }, "Right", awful.tag.viewnext, { description = "view next", group = "tag" }),
 	awful.key({ modkey }, "Escape", awful.tag.history.restore, { description = "go back", group = "tag" }),
@@ -358,9 +358,9 @@ local globalkeys = gears.table.join(
 	awful.key({ modkey }, "k", function()
 		awful.client.focus.byidx(-1)
 	end, { description = "focus previous by index", group = "client" }),
-	awful.key({ modkey }, "/", function()
-		mymainmenu:show()
-	end, { description = "show main menu", group = "awesome" }),
+	-- awful.key({ modkey }, "/", function()
+	-- 	mymainmenu:show()
+	-- end, { description = "show main menu", group = "awesome" }),
 
 	-- Layout manipulation
 	awful.key({ modkey, "Shift" }, "j", function()
@@ -467,6 +467,10 @@ local globalkeys = gears.table.join(
 		screenshot.take_screenshot_alternative()
 	end, { description = "rofi menu for screenshots", group = "screenshot" }),
 
+	-- Menubar
+	-- awful.key({ modkey }, "p", function()
+	-- 	menubar.show()
+	-- end, { description = "show the menubar", group = "launcher" }),
 	awful.key({ modkey }, "'", function()
 		awful.prompt.run({
 			prompt = "Run Lua code: ",
@@ -474,11 +478,7 @@ local globalkeys = gears.table.join(
 			exe_callback = awful.util.eval,
 			history_path = awful.util.get_cache_dir() .. "/history_eval",
 		})
-	end, { description = "lua execute prompt", group = "awesome" }),
-	-- Menubar
-	awful.key({ modkey }, "p", function()
-		menubar.show()
-	end, { description = "show the menubar", group = "launcher" })
+	end, { description = "lua execute prompt", group = "awesome" })
 )
 
 -- Bind all key numbers to tags.
